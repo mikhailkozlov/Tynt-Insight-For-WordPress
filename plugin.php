@@ -1,11 +1,12 @@
 <?php 
 /*
-	Plugin Name: Vayama Tynt Insight
-	Plugin URI: http://vayama.com/
-	Description: Make link-backs to your content effortless for readers and gain new insight into user engagement with Tynt Insight.
-	Author: Mikhail Kozlov
-	Version: 1.0.0
-	License: GPL
+Plugin Name: Tynt Insight For WordPress
+Plugin URI: http://mikhailkozlov.com/tynt-insight-for-wordpress/
+Description: Make link-backs to your content effortless for readers and gain new insight into user engagement with Tynt Insight.
+Author: Mikhail Kozlov
+Version: 1.0.0
+License: MIT
+Author Url: http://mikhailkozlov.com/
 */
 
 class VayamaTyntInsight{
