@@ -4,3 +4,11 @@ Description: Make link-backs to your content effortless for readers and gain new
 Author: Mikhail Kozlov
 Version: 1.0.0
 License: MIT
+
+
+1. Register @ http://www.tynt.com/ and get your Tynt ID (it is free).
+2. Get files from this repo and put them into "tynt-insight-for-wordpress" folder (actually any folder will work). 
+3. Go to Plugins section of your WordPress and activate plugin "Tynt Insight For WordPress" plugin.
+4. Head over to "Tynt Insight" page in "Settings" section of the admin menu.
+5. Enter you Tynt ID and click save.
+6. Done. 

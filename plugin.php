@@ -59,38 +59,8 @@ class VayamaTyntInsight{
 		if(is_admin()) {
 			add_action('admin_menu', array('VayamaTyntInsight','admin_menu'));
 			wp_enqueue_script('tynt-insight-for-wordpress', plugins_url('tynt-insight-for-wordpress') . '/scripts.js', array('jquery'), '1.0.0', true);
-			
-			if(isset($_POST['action']) && isset($_GET['page']) && $_GET['page'] == 'vayama-tynt-insight'){
-				$options=self::$options;
-				$options=array_merge($options,unserialize(get_option($options['key'])));
-				foreach(self::$options as $k=>$v){
-					if(isset($_POST[$k]) && !empty($_POST[$k])){
-						$options[$k] = urldecode($_POST[$k]);
-					}
-					if(array_key_exists($k,$options) && empty($_POST[$k])){
-						$options[$k] = 'empty';
-					}					
-				}
-				// format sponsor link
-				$options['param-el'] = $options['tynt-sponsor-text'].' <a href="'.$options['tynt-sponsor-link'].'" target="_blank" color="#003399">'.$options['tynt-sponsor-name'].'</a>';
-				
-				// format main link
-				switch($options['link-formating']){
-					case '2':
-						$options['param-st'] = 'true';
-						$options['param-su'] = 'false';
-						break;
-					case '3':
-						$options['param-st'] = 'true';
-						$options['param-su'] = 'empty';
-						break;
-				}
-				if(update_option( self::$options['key'], serialize($options) )){
-					header('Location: options-general.php?page=vayama-tynt-insight&updated=true');
-				}
-				
-				
-			}			
+			add_filter( 'plugin_action_links', array('VayamaTyntInsight','tynt_insight_action_links'), 10, 2 );
+			self::saveSettings();
 		}else{
 			switch($options['tynt-where']){
 				case 'footer':
@@ -105,6 +75,46 @@ class VayamaTyntInsight{
 			}
 		}		
 		
+	}
+	function saveSettings(){
+			if(isset($_POST['action']) && isset($_GET['page']) && $_GET['page'] == 'vayama-tynt-insight'){
+				$options=self::$options;
+				$options=array_merge($options,unserialize(get_option($options['key'])));
+				foreach(self::$options as $k=>$v){
+					if(isset($_POST[$k]) && !empty($_POST[$k])){
+						$options[$k] = urldecode($_POST[$k]);
+					}
+					if(array_key_exists($k,$options) && empty($_POST[$k])){
+						$options[$k] = 'empty';
+					}					
+				}
+				// format sponsor link
+				$options['tynt-sponsor-name'] = ($options['tynt-sponsor-name'] == 'empty') ? '':$options['tynt-sponsor-name'];
+				$options['tynt-sponsor-link'] = ($options['tynt-sponsor-link'] == 'empty') ? '':$options['tynt-sponsor-link'];
+				$options['tynt-sponsor-text'] = ($options['tynt-sponsor-text'] == 'empty') ? '':$options['tynt-sponsor-text'];
+				$options['param-el'] =(!empty($options['tynt-sponsor-name']) && !empty($options['tynt-sponsor-link'])) ?  $options['tynt-sponsor-text'].' <a href="'.$options['tynt-sponsor-link'].'" target="_blank" color="#003399">'.$options['tynt-sponsor-name'].'</a>':'empty';
+				// format main link
+				switch($options['link-formating']){
+					case '2':
+						$options['param-st'] = 'true';
+						$options['param-su'] = 'false';
+						break;
+					case '3':
+						$options['param-st'] = 'true';
+						$options['param-su'] = 'empty';
+						break;
+				}
+				if(update_option( self::$options['key'], serialize($options) )){
+					header('Location: options-general.php?page=vayama-tynt-insight&updated=true');
+				}
+			}			
+	}
+	function tynt_insight_action_links($links, $file){
+		if ( $file == plugin_basename( dirname(__FILE__).'/plugin.php' ) ) {
+			$links[] = '<a href="options-general.php?page=vayama-tynt-insight">'.__('Settings').'</a>';
+		}
+	
+		return $links;
 	}
 	function admin_menu(){
 		add_options_page('Tynt Insight Options', 'Tynt Insight', 'manage_options', 'vayama-tynt-insight', array('VayamaTyntInsight','admin_options_page'));
