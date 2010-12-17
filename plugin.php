@@ -9,7 +9,7 @@ License: MIT
 Author Url: http://mikhailkozlov.com/
 */
 
-class VayamaTyntInsight{
+class TyntInsightForWordPress{
 	static $options=array(
 				'v'=>'1.0.0',
 				'key'=>'tynt-insight-for-wordpress',
@@ -57,17 +57,17 @@ class VayamaTyntInsight{
 			$options = self::activate();
 		}
 		if(is_admin()) {
-			add_action('admin_menu', array('VayamaTyntInsight','admin_menu'));
+			add_action('admin_menu', array('TyntInsightForWordPress','admin_menu'));
 			wp_enqueue_script('tynt-insight-for-wordpress', plugins_url('tynt-insight-for-wordpress') . '/scripts.js', array('jquery'), '1.0.0', true);
-			add_filter( 'plugin_action_links', array('VayamaTyntInsight','tynt_insight_action_links'), 10, 2 );
+			add_filter( 'plugin_action_links', array('TyntInsightForWordPress','tynt_insight_action_links'), 10, 2 );
 			self::saveSettings();
 		}else{
 			switch($options['tynt-where']){
 				case 'footer':
-					add_action('wp_footer', array('VayamaTyntInsight','printTyntInsight'));
+					add_action('wp_footer', array('TyntInsightForWordPress','printTyntInsight'));
 				break;
 				case 'header':
-					add_action('wp_head', array('VayamaTyntInsight','printTyntInsight'));
+					add_action('wp_head', array('TyntInsightForWordPress','printTyntInsight'));
 				break;
 				default:
 					// this custome case, so user will implement code.
@@ -77,7 +77,7 @@ class VayamaTyntInsight{
 		
 	}
 	function saveSettings(){
-			if(isset($_POST['action']) && isset($_GET['page']) && $_GET['page'] == 'vayama-tynt-insight'){
+			if(isset($_POST['action']) && isset($_GET['page']) && $_GET['page'] == 'tynt-insight-for-wordpress'){
 				$options=self::$options;
 				$options=array_merge($options,unserialize(get_option($options['key'])));
 				foreach(self::$options as $k=>$v){
@@ -105,19 +105,19 @@ class VayamaTyntInsight{
 						break;
 				}
 				if(update_option( self::$options['key'], serialize($options) )){
-					header('Location: options-general.php?page=vayama-tynt-insight&updated=true');
+					header('Location: options-general.php?page=tynt-insight-for-wordpress&updated=true');
 				}
 			}			
 	}
 	function tynt_insight_action_links($links, $file){
 		if ( $file == plugin_basename( dirname(__FILE__).'/plugin.php' ) ) {
-			$links[] = '<a href="options-general.php?page=vayama-tynt-insight">'.__('Settings').'</a>';
+			$links[] = '<a href="options-general.php?page=tynt-insight-for-wordpress">'.__('Settings').'</a>';
 		}
 	
 		return $links;
 	}
 	function admin_menu(){
-		add_options_page('Tynt Insight Options', 'Tynt Insight', 'manage_options', 'vayama-tynt-insight', array('VayamaTyntInsight','admin_options_page'));
+		add_options_page('Tynt Insight Options', 'Tynt Insight', 'manage_options', 'tynt-insight-for-wordpress', array('TyntInsightForWordPress','admin_options_page'));
 	}
 	function admin_options_page(){
 		if (!current_user_can('manage_options'))  {
@@ -132,7 +132,7 @@ class VayamaTyntInsight{
 				Once you have access to your panel, paste your Tynt Insight code here.
 				</p>';
 		
-		echo '<form action="options-general.php?page=vayama-tynt-insight" name="vayama-tynt-insight" method="post">';
+		echo '<form action="options-general.php?page=tynt-insight-for-wordpress" name="tynt-insight-for-wordpress" method="post">';
 		echo '
 			<table class="form-table">
 				<tbody>
@@ -358,9 +358,6 @@ if ( function_exists(\'tyntInsight\') ){
 					$aParms[$k] = urldecode($v);
 				}
 			}
-			echo '<pre>';
-			print_r($aParms);
-			echo '</pre>';
 			// clean up js a bit
 			$params = str_replace('"false"','false',json_encode($aParms));
 			$params = str_replace('"true"','true',$params);
@@ -380,14 +377,14 @@ if ( function_exists(\'tyntInsight\') ){
 		echo self::getCode();
 	}
 }
-add_action('init', array('VayamaTyntInsight','init'));
+add_action('init', array('TyntInsightForWordPress','init'));
 
 /**
  * 
  * @return string();
  */
 function tyntInsight(){
-	echo VayamaTyntInsight::getCode();	
+	echo TyntInsightForWordPress::getCode();	
 }
 
-register_deactivation_hook( __FILE__, array('VayamaTyntInsight','deactivate') ); 
+register_deactivation_hook( __FILE__, array('TyntInsightForWordPress','deactivate') ); 
