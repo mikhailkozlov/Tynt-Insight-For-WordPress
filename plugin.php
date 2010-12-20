@@ -330,7 +330,6 @@ if ( function_exists(\'tyntInsight\') ){
 		';
 		echo '</form>';
 		echo '</div>';
-		print_r($options);
 	}
 	
 	/**
